@@ -86,6 +86,7 @@ public class RecentFragment extends Fragment {
                     resultTextFormat = recentChangesDiv.toString();
                     resultTextFormat = resultTextFormat.replaceAll("<div class=\"recent-change\">", "").trim();
                     resultTextFormat = resultTextFormat.replaceAll("</div>", "").trim();
+                    resultTextFormat = resultTextFormat.replaceAll("\n", "").trim();
 
                     scrappedRecentChange = (resultTextFormat);
 
@@ -101,6 +102,7 @@ public class RecentFragment extends Fragment {
                     scrappedAppData.add(5, scrappedRecentChange);
 
                     publishProgress(scrappedAppData);
+                    scrappedAppData = new ArrayList<String>();
 
                 } catch (IOException e) {
 
@@ -135,17 +137,17 @@ public class RecentFragment extends Fragment {
                 layoutParams.setMargins(50, 50, 0, 50);
                 cardView.setUseCompatPadding(true);
 
-                recentChangeTextView.setText((CharSequence) values[5]);
+                recentChangeTextView.setText((CharSequence) values[0].get(5));
                 recentChangeTextView.setPadding(0, 50, 0, 0);
-                appNameTextView.setText((CharSequence) values[4]);
+                appNameTextView.setText((CharSequence) values[0].get(4));
 
                 cardView.addView(appNameTextView);
                 cardView.addView(recentChangeTextView);
                 linearLayout.addView(cardView, layoutParams);
 
-                String dataString = values[0] + values[1];
+                String dataString = values[0].get(0) + ", " + values[0].get(1) + ", " + values[0].get(2) + ", " + values[0].get(3) + ", " + values[0].get(4) + ", " + values[0].get(5);
 
-                writeToFile(values, values[4]);
+                writeToFile(dataString, values[0].get(4));
         }
     }
 
@@ -166,46 +168,48 @@ public class RecentFragment extends Fragment {
         for (File file : subFiles)
         {
             appFiles.add(file.getName());
+
         }
 
         for (int i = 0; i < apps.size(); i++) {
 
-            if (subFiles != null)
-            {
                 for (File file : subFiles)
                 {
-                    ArrayList<String> storedFileData = readFromFile(file.getAbsolutePath());
-                    String storedVersionCode = storedFileData.get(0);
-                    int appVersionCode = apps.get(i).versionCode;
-                    String appVersionCodeString = Integer.toString(appVersionCode);
 
-                    if (appFiles.contains(file.getName()) && appVersionCodeString == storedVersionCode)
-                    {
-                        apps.remove(apps.get(i));
-                        ArrayList<String> fileData = readFromFile(file.getName());
+                    String currentAppDirectory = dir + "/" + apps.get(i).appname;
+                    if (file.toString().equals(currentAppDirectory)) {
 
-                        LinearLayout linearLayout = (LinearLayout) getActivity().findViewById(R.id.card_linear_layout);
+                        ArrayList<String> storedFileData = readFromFile(file.getAbsolutePath());
+                        String storedVersionCode = storedFileData.get(0);
+                        int appVersionCode = apps.get(i).versionCode;
+                        String appVersionCodeString = Integer.toString(appVersionCode);
 
-                        TextView recentChangeTextView = new TextView(getActivity());
-                        TextView appNameTextView = new TextView(getActivity());
-                        CardView cardView = new CardView(getActivity());
+                        if (appFiles.contains(file.getName()) && appVersionCodeString.equals(storedVersionCode)) {
+                            apps.remove(apps.get(i));
 
-                        cardView.setPadding(0, 50, 0, 50);
-                        cardView.setPaddingRelative(10, 10, 10, 10);
-                        CardView.LayoutParams layoutParams = new CardView.LayoutParams(CardView.LayoutParams.FILL_PARENT, CardView.LayoutParams.FILL_PARENT);
-                        layoutParams.setMargins(50, 50, 0, 50);
-                        cardView.setUseCompatPadding(true);
+                            LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.card_linear_layout);
 
-                        recentChangeTextView.setText(fileData.get(0).indexOf(5));
-                        recentChangeTextView.setPadding(0, 50, 0, 0);
-                        appNameTextView.setText(fileData.get(0).indexOf(4));
+                            TextView recentChangeTextView = new TextView(getActivity());
+                            TextView appNameTextView = new TextView(getActivity());
+                            CardView cardView = new CardView(getActivity());
 
-                        cardView.addView(appNameTextView);
-                        cardView.addView(recentChangeTextView);
-                        linearLayout.addView(cardView, layoutParams);
+                            cardView.setPadding(0, 50, 0, 50);
+                            cardView.setPaddingRelative(10, 10, 10, 10);
+                            CardView.LayoutParams layoutParams = new CardView.LayoutParams(CardView.LayoutParams.FILL_PARENT, CardView.LayoutParams.FILL_PARENT);
+                            layoutParams.setMargins(50, 50, 0, 50);
+                            cardView.setUseCompatPadding(true);
+
+                            recentChangeTextView.setText(storedFileData.get(5));
+                            recentChangeTextView.setPadding(0, 50, 0, 0);
+                            appNameTextView.setText(storedFileData.get(4));
+
+                            cardView.addView(appNameTextView);
+                            cardView.addView(recentChangeTextView);
+                            linearLayout.addView(cardView, layoutParams);
+
+                        }
                     }
                 }
-            }
 
         }
 
@@ -283,14 +287,14 @@ public class RecentFragment extends Fragment {
         ArrayList<String> fileData = null;
 
         try {
-            FileInputStream fileInputStream = getActivity().openFileInput(fileName);
+            FileInputStream fileInputStream = new FileInputStream(new File(fileName));
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String receiveString;
 
             receiveString = bufferedReader.readLine();
             fileData = new ArrayList<String>();
-            Collections.addAll(fileData, receiveString.split(" "));
+            Collections.addAll(fileData, receiveString.split(", "));
 
         } catch (IOException e) {
             e.printStackTrace();
