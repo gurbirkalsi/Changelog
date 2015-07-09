@@ -73,8 +73,7 @@ public class RecentFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... params) {
 
-            for (int i = 0; i < apps.size(); i++) {
-
+            for (int i = 0; i < apps.size(); i++)
                 try {
 
                     Log.v("App", apps.get(i).appname);
@@ -88,7 +87,15 @@ public class RecentFragment extends Fragment {
                     resultTextFormat = resultTextFormat.replaceAll("</div>", "").trim();
                     resultTextFormat = resultTextFormat.replaceAll("\n", "").trim();
 
-                    scrappedRecentChange = (resultTextFormat);
+                    if (resultTextFormat.equals("")) {
+
+                        scrappedRecentChange = "No change reported by developer.";
+
+                    } else {
+
+                        scrappedRecentChange = (resultTextFormat);
+
+                    }
 
                     int appVersionCode = apps.get(i).versionCode;
                     String appVersionCodeString = Integer.toString(appVersionCode);
@@ -109,8 +116,6 @@ public class RecentFragment extends Fragment {
                     e.printStackTrace();
 
                 }
-
-            }
 
             return null;
 
@@ -194,10 +199,11 @@ public class RecentFragment extends Fragment {
                             CardView cardView = new CardView(getActivity());
 
                             cardView.setPadding(0, 50, 0, 50);
-                            cardView.setPaddingRelative(10, 10, 10, 10);
+                            cardView.setPaddingRelative(16, 16, 16, 16);
                             CardView.LayoutParams layoutParams = new CardView.LayoutParams(CardView.LayoutParams.FILL_PARENT, CardView.LayoutParams.FILL_PARENT);
                             layoutParams.setMargins(50, 50, 0, 50);
                             cardView.setUseCompatPadding(true);
+                            cardView.setRadius(4);
 
                             recentChangeTextView.setText(storedFileData.get(5));
                             recentChangeTextView.setPadding(0, 50, 0, 0);
