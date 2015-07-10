@@ -3,6 +3,9 @@ package gurbirkalsi.changelog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -12,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -51,7 +56,9 @@ public class RecentFragment extends Fragment {
 
     ArrayList<String> scrappedAppData = new ArrayList<String>();
 
-    ArrayList<PInfo> apps;
+    List<PackageInfo> apps;
+
+    PackageManager packageManager;
 
     public class SearchResult extends AsyncTask<Void, ArrayList<String>, Void> {
 
@@ -76,8 +83,8 @@ public class RecentFragment extends Fragment {
             for (int i = 0; i < apps.size(); i++)
                 try {
 
-                    Log.v("App", apps.get(i).appname);
-                    url = "https://play.google.com/store/apps/details?id=" + apps.get(i).pname;
+                    //Log.v("App", apps.get(i).applicationInfo.name);
+                    url = "https://play.google.com/store/apps/details?id=" + apps.get(i).packageName;
 
                     Document document = Jsoup.connect(url).get();
                     Elements recentChangesDiv = document.select("div[class=recent-change]");
@@ -104,8 +111,8 @@ public class RecentFragment extends Fragment {
                     scrappedAppData.add(0, appVersionCodeString);
                     scrappedAppData.add(1, apps.get(i).versionName);
                     scrappedAppData.add(2, appLastUpdateTimeString);
-                    scrappedAppData.add(3, apps.get(i).pname);
-                    scrappedAppData.add(4, apps.get(i).appname);
+                    scrappedAppData.add(3, apps.get(i).packageName);
+                    scrappedAppData.add(4, packageManager.getApplicationLabel(apps.get(i).applicationInfo).toString());
                     scrappedAppData.add(5, scrappedRecentChange);
 
                     publishProgress(scrappedAppData);
@@ -159,12 +166,12 @@ public class RecentFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v =inflater.inflate(R.layout.recent_tab,container,false);
+        View v =inflater.inflate(R.layout.recent_tab, container, false);
 
         apps = getPackages();
 
         //Sorts the apps alphabetically
-        Collections.sort(apps, new RecentFragment.CustomComparator());
+        //Collections.sort(apps, new RecentFragment.CustomComparator());
 
         File dir = getActivity().getFilesDir();
         File[] subFiles = dir.listFiles();
@@ -181,7 +188,8 @@ public class RecentFragment extends Fragment {
                 for (File file : subFiles)
                 {
 
-                    String currentAppDirectory = dir + "/" + apps.get(i).appname;
+
+                    String currentAppDirectory = dir + "/" + packageManager.getApplicationLabel(apps.get(i).applicationInfo).toString();;
                     if (file.toString().equals(currentAppDirectory)) {
 
                         ArrayList<String> storedFileData = readFromFile(file.getAbsolutePath());
@@ -190,13 +198,24 @@ public class RecentFragment extends Fragment {
                         String appVersionCodeString = Integer.toString(appVersionCode);
 
                         if (appFiles.contains(file.getName()) && appVersionCodeString.equals(storedVersionCode)) {
-                            apps.remove(apps.get(i));
 
                             LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.card_linear_layout);
 
+                            RelativeLayout relativeLayout = new RelativeLayout(getActivity());
+                            RelativeLayout.LayoutParams relativeLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT);
+
                             TextView recentChangeTextView = new TextView(getActivity());
                             TextView appNameTextView = new TextView(getActivity());
+                            ImageView appIcon = new ImageView(getActivity());
                             CardView cardView = new CardView(getActivity());
+
+                            appIcon.setId(1);
+                            appNameTextView.setId(2);
+                            recentChangeTextView.setId(3);
+
+                            relativeLayoutParams.addRule(RelativeLayout.ALIGN_TOP, 1);
+                            relativeLayoutParams.addRule(RelativeLayout.ALIGN_BOTTOM);
+
 
                             cardView.setPadding(0, 50, 0, 50);
                             cardView.setPaddingRelative(16, 16, 16, 16);
@@ -205,13 +224,25 @@ public class RecentFragment extends Fragment {
                             cardView.setUseCompatPadding(true);
                             cardView.setRadius(4);
 
+                            Drawable drawable = packageManager.getApplicationIcon(apps.get(i).applicationInfo);
+                            Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                            Drawable appIconDrawable = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 81, 81, true));
+
+                            LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(81, 81);
+                            appIcon.setLayoutParams(imageLayoutParams);
+
+                            appIcon.setImageDrawable(appIconDrawable);
                             recentChangeTextView.setText(storedFileData.get(5));
                             recentChangeTextView.setPadding(0, 50, 0, 0);
                             appNameTextView.setText(storedFileData.get(4));
 
+                            cardView.addView(appIcon);
                             cardView.addView(appNameTextView);
                             cardView.addView(recentChangeTextView);
-                            linearLayout.addView(cardView, layoutParams);
+                            relativeLayout.addView(cardView, layoutParams);
+                            linearLayout.addView(relativeLayout);
+
+                            apps.remove(apps.get(i));
 
                         }
                     }
@@ -226,54 +257,10 @@ public class RecentFragment extends Fragment {
     }
 
     //PACKAGE HANDLER METHODS
-    class PInfo {
-        private String appname = "";
-        private String pname = "";
-        private String versionName = "";
-        private int versionCode = 0;
-        private long lastUpdateTime = 0;
-        private Drawable icon;
-        private void prettyPrint() {
-            final String TAG = "";
-            Log.v(TAG, appname + "\t" + pname + "\t" + versionName + "\t" + versionCode + "\t" + lastUpdateTime);
-        }
-    }
-
-    private ArrayList<PInfo> getPackages() {
-        ArrayList<PInfo> apps = getInstalledApps(false); /* false = no system packages */
-        final int max = apps.size();
-        for (int i=0; i<max; i++) {
-            apps.get(i).prettyPrint();
-        }
+    private List<PackageInfo> getPackages() {
+        packageManager = getActivity().getPackageManager();
+        apps = packageManager.getInstalledPackages(0); /* false = no system packages */
         return apps;
-    }
-
-    private ArrayList<PInfo> getInstalledApps(boolean getSysPackages) {
-        ArrayList<PInfo> res = new ArrayList<PInfo>();
-        List<PackageInfo> packs = getActivity().getPackageManager().getInstalledPackages(0);
-        for(int i=0;i<packs.size();i++) {
-            PackageInfo p = packs.get(i);
-            if ((!getSysPackages) && (p.versionName == null)) {
-                continue;
-            }
-            PInfo newInfo = new PInfo();
-            newInfo.appname = p.applicationInfo.loadLabel(getActivity().getPackageManager()).toString();
-            newInfo.pname = p.packageName;
-            newInfo.versionName = p.versionName;
-            newInfo.versionCode = p.versionCode;
-            newInfo.lastUpdateTime = p.lastUpdateTime;
-            newInfo.icon = p.applicationInfo.loadIcon(getActivity().getPackageManager());
-            res.add(newInfo);
-        }
-        return res;
-    }
-
-    public class CustomComparator implements Comparator<PInfo> {
-
-        @Override
-        public int compare(PInfo lhs, PInfo rhs) {
-            return lhs.appname.compareTo(rhs.appname);
-        }
     }
 
     //FILE HANDLER METHODS
