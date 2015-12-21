@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -44,9 +45,6 @@ import java.util.logging.Handler;
 import static android.content.Context.*;
 import static android.content.Context.MODE_PRIVATE;
 
-/**
- * Created by Guri on 5/3/15.
- */
 public class RecentFragment extends Fragment {
 
     TextView recentChangeText;
@@ -63,16 +61,10 @@ public class RecentFragment extends Fragment {
     public class SearchResult extends AsyncTask<Void, ArrayList<String>, Void> {
 
         String resultTextFormat;
-
-        String result;
         String url;
-
-        ProgressDialog mProgressDialog;
-
 
         @Override
         protected void onPreExecute() {
-
             super.onPreExecute();
 
         }
@@ -81,6 +73,7 @@ public class RecentFragment extends Fragment {
         protected Void doInBackground(Void... params) {
 
             for (int i = 0; i < apps.size(); i++)
+
                 try {
 
                     //Log.v("App", apps.get(i).applicationInfo.name);
@@ -129,12 +122,6 @@ public class RecentFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Void result) {
-
-
-        }
-
-        @Override
         protected void onProgressUpdate(ArrayList<String>... values) {
             super.onProgressUpdate(values);
                 LinearLayout linearLayout = (LinearLayout) getActivity().findViewById(R.id.card_linear_layout);
@@ -177,17 +164,18 @@ public class RecentFragment extends Fragment {
         File[] subFiles = dir.listFiles();
         ArrayList<String> appFiles = new ArrayList<String>();
 
+        Feed
+        SQLiteDatabase appInfoDatbase = mDb
+
         for (File file : subFiles)
         {
             appFiles.add(file.getName());
-
         }
 
         for (int i = 0; i < apps.size(); i++) {
 
                 for (File file : subFiles)
                 {
-
 
                     String currentAppDirectory = dir + "/" + packageManager.getApplicationLabel(apps.get(i).applicationInfo).toString();;
                     if (file.toString().equals(currentAppDirectory)) {
@@ -247,7 +235,6 @@ public class RecentFragment extends Fragment {
                         }
                     }
                 }
-
         }
 
         new SearchResult().execute();
