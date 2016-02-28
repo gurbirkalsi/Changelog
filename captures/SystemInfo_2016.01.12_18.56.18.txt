@@ -1,0 +1,96 @@
+TASK gurbirkalsi.changelog id=176
+  ACTIVITY gurbirkalsi.changelog/.MainActivity 153c667e pid=19957
+    Local FragmentActivity 1d71985e State:
+      mCreated=truemResumed=true mStopped=false mReallyStopped=false
+      mLoadersStarted=true
+    Active Fragments in 1c7eb43f:
+      #0: StarredFragment{2498210c #0 id=0x7f090041}
+        mFragmentId=#7f090041 mContainerId=#7f090041 mTag=null
+        mState=5 mIndex=0 mWho=android:fragment:0 mBackStackNesting=0
+        mAdded=true mRemoving=false mResumed=true mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=false mHasMenu=false
+        mRetainInstance=false mRetaining=false mUserVisibleHint=false
+        mFragmentManager=FragmentManager{1c7eb43f in MainActivity{1d71985e}}
+        mActivity=gurbirkalsi.changelog.MainActivity@1d71985e
+        mContainer=android.support.v4.view.ViewPager{a1fea55 VFED.... ........ 0,313-1080,1701 #7f090041 app:id/pager}
+        mView=android.support.v4.app.NoSaveStateFrameLayout{1bbadc6a V.E..... ......ID 0,0-1080,1388}
+        mInnerView=android.support.v4.app.NoSaveStateFrameLayout{1bbadc6a V.E..... ......ID 0,0-1080,1388}
+        Child FragmentManager{21b4555b in StarredFragment{2498210c}}:
+          FragmentManager misc state:
+            mActivity=gurbirkalsi.changelog.MainActivity@1d71985e
+            mContainer=android.support.v4.app.Fragment$1@2b2c41f8
+            mParent=StarredFragment{2498210c #0 id=0x7f090041}
+            mCurState=5 mStateSaved=false mDestroyed=false
+      #1: RecentFragment{1bc1d6d1 #1 id=0x7f090041}
+        mFragmentId=#7f090041 mContainerId=#7f090041 mTag=null
+        mState=5 mIndex=1 mWho=android:fragment:1 mBackStackNesting=0
+        mAdded=true mRemoving=false mResumed=true mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=true mHasMenu=false
+        mRetainInstance=false mRetaining=false mUserVisibleHint=true
+        mFragmentManager=FragmentManager{1c7eb43f in MainActivity{1d71985e}}
+        mActivity=gurbirkalsi.changelog.MainActivity@1d71985e
+        mContainer=android.support.v4.view.ViewPager{a1fea55 VFED.... ........ 0,313-1080,1701 #7f090041 app:id/pager}
+        mView=android.support.v4.app.NoSaveStateFrameLayout{17a25536 V.E..... ........ 1080,0-2160,1388}
+        mInnerView=android.support.v4.app.NoSaveStateFrameLayout{17a25536 V.E..... ........ 1080,0-2160,1388}
+        Child FragmentManager{23d8ec37 in RecentFragment{1bc1d6d1}}:
+          FragmentManager misc state:
+            mActivity=gurbirkalsi.changelog.MainActivity@1d71985e
+            mContainer=android.support.v4.app.Fragment$1@4df85a4
+            mParent=RecentFragment{1bc1d6d1 #1 id=0x7f090041}
+            mCurState=5 mStateSaved=false mDestroyed=false
+      #2: AllFragment{2ebc0f0d #2 id=0x7f090041}
+        mFragmentId=#7f090041 mContainerId=#7f090041 mTag=null
+        mState=5 mIndex=2 mWho=android:fragment:2 mBackStackNesting=0
+        mAdded=true mRemoving=false mResumed=true mFromLayout=false mInLayout=false
+        mHidden=false mDetached=false mMenuVisible=false mHasMenu=false
+        mRetainInstance=false mRetaining=false mUserVisibleHint=false
+        mFragmentManager=FragmentManager{1c7eb43f in MainActivity{1d71985e}}
+        mActivity=gurbirkalsi.changelog.MainActivity@1d71985e
+        mContainer=android.support.v4.view.ViewPager{a1fea55 VFED.... ........ 0,313-1080,1701 #7f090041 app:id/pager}
+        mView=android.support.v4.app.NoSaveStateFrameLayout{23b68ec2 V.E..... ........ 2160,0-3240,1388}
+        mInnerView=android.support.v4.app.NoSaveStateFrameLayout{23b68ec2 V.E..... ........ 2160,0-3240,1388}
+        Child FragmentManager{4614d3 in AllFragment{2ebc0f0d}}:
+          FragmentManager misc state:
+            mActivity=gurbirkalsi.changelog.MainActivity@1d71985e
+            mContainer=android.support.v4.app.Fragment$1@26615810
+            mParent=AllFragment{2ebc0f0d #2 id=0x7f090041}
+            mCurState=5 mStateSaved=false mDestroyed=false
+    Added Fragments:
+      #0: RecentFragment{1bc1d6d1 #1 id=0x7f090041}
+      #1: AllFragment{2ebc0f0d #2 id=0x7f090041}
+      #2: StarredFragment{2498210c #0 id=0x7f090041}
+    FragmentManager misc state:
+      mActivity=gurbirkalsi.changelog.MainActivity@1d71985e
+      mContainer=android.support.v4.app.FragmentActivity$2@2ca78f09
+      mCurState=5 mStateSaved=false mDestroyed=false
+    View Hierarchy:
+      com.android.internal.policy.impl.PhoneWindow$DecorView{3ae2d50e V.E..... ... 0,0-1080,1920}
+        android.widget.LinearLayout{6532b2f V.E..... ... 0,0-1080,1776}
+          android.view.ViewStub{1debe53c G.E..... ... 0,0-0,0 #102036e}
+          android.widget.FrameLayout{25b112c5 V.E..... ... 0,75-1080,1776}
+            android.support.v7.internal.widget.FitWindowsLinearLayout{97b341a V.E..... ... 0,0-1080,1701 #7f09002c app:id/action_bar_root}
+              android.support.v7.internal.widget.ViewStubCompat{39714b4b G.E..... ... 0,0-0,0 #7f09002d app:id/action_mode_bar_stub}
+              android.support.v7.internal.widget.NativeActionModeAwareLayout{1301928 V.E..... ... 0,0-1080,1701 #1020002 android:id/content}
+                android.widget.LinearLayout{6151641 V.E..... ... 0,0-1080,1701}
+                  android.support.v7.widget.Toolbar{3b0877e6 V.E..... ... 0,0-1080,168 #7f09003f app:id/tool_bar}
+                    android.widget.TextView{19075127 V.ED.... ... 48,43-334,124}
+                    android.support.v7.widget.ActionMenuView{e019fd4 V.E..... ... 972,0-1080,168}
+                      android.support.v7.widget.ActionMenuPresenter$OverflowMenuButton{275bd57d VFED..C. ... 0,12-108,156}
+                  gurbirkalsi.changelog.SlidingTabLayout{18d42c72 VFED.... ... 0,168-1080,313 #7f090040 app:id/tabs}
+                    gurbirkalsi.changelog.SlidingTabStrip{a0dd8c3 V.ED.... ... 0,0-1080,145}
+                      android.widget.TextView{29c2e540 V.ED..C. ... 0,0-360,145}
+                      android.widget.TextView{39554c79 V.ED..C. .S. 360,0-720,145}
+                      android.widget.TextView{5349dbe V.ED..C. ... 720,0-1080,145}
+                  android.support.v4.view.ViewPager{a1fea55 VFED.... ... 0,313-1080,1701 #7f090041 app:id/pager}
+                    android.support.v4.app.NoSaveStateFrameLayout{17a25536 V.E..... ... 1080,0-2160,1388}
+                      android.widget.LinearLayout{3e6b3e1f V.E..... ... 0,0-1080,1388 #7f090043 app:id/linear_layout}
+                        android.widget.ScrollView{2b91156c VFED.V.. ... 0,0-1080,1388}
+                          android.widget.LinearLayout{3ed53735 V.E..... ... 0,0-1080,0 #7f090044 app:id/card_linear_layout}
+                    android.support.v4.app.NoSaveStateFrameLayout{23b68ec2 V.E..... ... 2160,0-3240,1388}
+                      android.widget.RelativeLayout{1f98d7ca V.E..... ... 0,0-1080,1388}
+                        android.widget.TextView{360f9d3b V.ED.... ... 509,657-570,730 #7f090042 app:id/textTab}
+                    android.support.v4.app.NoSaveStateFrameLayout{1bbadc6a V.E..... ... 0,0-1080,1388}
+                      android.widget.RelativeLayout{1d301c58 V.E..... ... 0,0-1080,1388}
+                        android.widget.TextView{1a2f11b1 V.ED.... ... 453,657-627,730 #7f090042 app:id/textTab}
+        android.view.View{1d54a696 V.ED.... ... 0,0-1080,75 #102002f android:id/statusBarBackground}
+        android.view.View{35d0d217 V.ED.... ... 0,1776-1080,1920 #1020030 android:id/navigationBarBackground}

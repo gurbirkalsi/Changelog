@@ -25,13 +25,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         //SQL statement to create app table
-        String CREATE_APP_TABLE = "CREATE TABLE apps ( " +
-                "versionCode INTEGER, " +
-                "versionName TEXT, " +
-                "lastUpdateTime LONG, " +
-                "packageName TEXT, " +
-                "applicationName TEXT, " +
-                "changelogText TEXT";
+        String CREATE_APP_TABLE = "CREATE TABLE apps(" +
+                "version_code INTEGER, " +
+                "version_name TEXT, " +
+                "last_update_time LONG, " +
+                "package_name TEXT, " +
+                "application_name TEXT, " +
+                "changelog_text TEXT);";
         db.execSQL(CREATE_APP_TABLE);
 
     }
@@ -58,9 +58,10 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String KEY_VERSION_NAME = "version_name";
     private static final String KEY_LAST_UPDATE_TIME = "last_update_time";
     private static final String KEY_PACKAGE_NAME = "package_name";
+    private static final String KEY_APPLICATION_NAME = "application_name";
     private static final String KEY_CHANGELOG_TEXT = "changelog_text";
 
-    private static final String[] COLUMNS = {KEY_VERSION_CODE, KEY_VERSION_NAME, KEY_LAST_UPDATE_TIME, KEY_PACKAGE_NAME, KEY_CHANGELOG_TEXT};
+    private static final String[] COLUMNS = {KEY_VERSION_CODE, KEY_VERSION_NAME, KEY_LAST_UPDATE_TIME, KEY_PACKAGE_NAME, KEY_APPLICATION_NAME, KEY_CHANGELOG_TEXT};
 
     public void addApp(App app) {
         Log.d("addApp", app.toString());
@@ -73,6 +74,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(KEY_VERSION_NAME, app.getVersionName());
         values.put(KEY_LAST_UPDATE_TIME, app.getLastUdpateTime());
         values.put(KEY_PACKAGE_NAME, app.getPackageName());
+        values.put(KEY_APPLICATION_NAME, app.getApplicationName());
         values.put(KEY_CHANGELOG_TEXT, app.getChangelogText());
 
         //Insert the database
@@ -102,7 +104,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         app.setVersionName(cursor.getString(1));
         app.setLastUdpateTime(cursor.getLong(2));
         app.setPackageName(cursor.getString(3));
-        app.setChangelogText(cursor.getString(4));
+        app.setApplicationName(cursor.getString(4));
+        app.setChangelogText(cursor.getString(5));
 
         Log.d("getApp(" + packageName + ")", app.toString());
 
@@ -131,7 +134,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 app.setVersionName(cursor.getString(1));
                 app.setLastUdpateTime(cursor.getLong(2));
                 app.setPackageName(cursor.getString(3));
-                app.setChangelogText(cursor.getString(4));
+                app.setApplicationName(cursor.getString(4));
+                app.setChangelogText(cursor.getString(5));
 
                 // Add book to books
                 books.add(app);
@@ -156,6 +160,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(KEY_VERSION_NAME, app.getVersionName());
         values.put(KEY_LAST_UPDATE_TIME, app.getLastUdpateTime());
         values.put(KEY_PACKAGE_NAME, app.getPackageName());
+        values.put(KEY_APPLICATION_NAME, app.getApplicationName());
         values.put(KEY_CHANGELOG_TEXT, app.getChangelogText());
 
         //Updating row

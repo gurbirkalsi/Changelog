@@ -1,5 +1,7 @@
 package gurbirkalsi.changelog;
 
+import android.graphics.drawable.Drawable;
+
 public class App {
 
     private int versionCode;
@@ -8,10 +10,11 @@ public class App {
     private String packageName;
     private String applicationName;
     private String changelogText;
+    private Drawable appIcon;
 
     public App(){}
 
-    public App(int versionCode, String versionName, long lastUpdateTime, String packageName, String applicationName, String changelogText) {
+    public App(int versionCode, String versionName, long lastUpdateTime, String packageName, String applicationName, String changelogText, Drawable appIcon) {
         super();
         this.versionCode = versionCode;
         this.versionName = versionName;
@@ -19,6 +22,7 @@ public class App {
         this.packageName = packageName;
         this.applicationName = applicationName;
         this.changelogText = changelogText;
+        this.appIcon = appIcon;
     }
 
     public int getVersionCode() {
@@ -67,6 +71,14 @@ public class App {
 
     public void setChangelogText(String changelogText) {
         this.changelogText = changelogText;
+    }
+
+    public Drawable getAppIcon() {
+        return appIcon;
+    }
+
+    public void setAppIcon(Drawable appIcon) {
+        this.appIcon = appIcon;
     }
 
     @Override

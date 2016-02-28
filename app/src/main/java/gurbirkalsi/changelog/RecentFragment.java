@@ -1,49 +1,76 @@
+/*
+* Copyright (C) 2014 The Android Open Source Project
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
 package gurbirkalsi.changelog;
 
-import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RadioButton;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Demonstrates the use of {@link RecyclerView} with a {@link LinearLayoutManager} and a
+ * {@link GridLayoutManager}.
+ */
 public class RecentFragment extends Fragment {
+
+    private static final String TAG = "RecyclerViewFragment";
+    private static final String KEY_LAYOUT_MANAGER = "layoutManager";
+    private static final int SPAN_COUNT = 2;
+    private static final int DATASET_COUNT = 60;
+
+    private enum LayoutManagerType {
+        GRID_LAYOUT_MANAGER,
+        LINEAR_LAYOUT_MANAGER
+    }
+
+    protected LayoutManagerType mCurrentLayoutManagerType;
+
+    protected RadioButton mLinearLayoutRadioButton;
+    protected RadioButton mGridLayoutRadioButton;
+
+    protected RecyclerView mRecyclerView;
+    protected AppAdapter mAdapter;
+    protected RecyclerView.LayoutManager mLayoutManager;
+    protected String[] mDataset;
+
+    List<App> appsList = new ArrayList<>();
 
     List<PackageInfo> appPackages;
     PackageManager packageManager;
-
-    MySQLiteHelper appDatabase;
-
-
-
 
     public class SearchResult extends AsyncTask<String, ArrayList<String>, JSONObject> {
 
@@ -72,7 +99,10 @@ public class RecentFragment extends Fragment {
                 }
                 bufferedReader.close();
                 object = new JSONObject(stringBuilder.toString());
+                appsList.add(new App(0, "0", 123456789L, "package", (String) object.get("name"), (String) object.get("changelog"), packageManager.getApplicationIcon(appUrl[1])));
             } catch (JSONException | IOException e) {
+                e.printStackTrace();
+            } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             } finally {
                 try {
@@ -93,79 +123,98 @@ public class RecentFragment extends Fragment {
                 Log.v("TAG", "This is a system process, not represented in UI");
 
             } else {
-
-                LinearLayout linearLayout = (LinearLayout) getActivity().findViewById(R.id.card_linear_layout);
-
-                TextView recentChangeTextView = new TextView(getActivity());
-                TextView appNameTextView = new TextView(getActivity());
-                CardView cardView = new CardView(getActivity());
-
-                cardView.setPadding(0, 50, 0, 50);
-                cardView.setPaddingRelative(10, 10, 10, 10);
-                CardView.LayoutParams layoutParams = new CardView.LayoutParams(CardView.LayoutParams.FILL_PARENT, CardView.LayoutParams.FILL_PARENT);
-                layoutParams.setMargins(50, 50, 0, 50);
-                cardView.setUseCompatPadding(true);
-
                 try {
-                    recentChangeTextView.setText((CharSequence) response.get("changelog"));
-                    recentChangeTextView.setPadding(0, 50, 0, 0);
-                    appNameTextView.setText((CharSequence) response.get("name"));
+                    //appsList.add(new App(0, "0", 123456789L, "package", (String) response.get("name"), (String) response.get("changelog")));
+                    Log.v("Added", "Added the app" + response.get("name").toString());
+                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                cardView.addView(appNameTextView);
-                cardView.addView(recentChangeTextView);
-                linearLayout.addView(cardView, layoutParams);
-
             }
-
-
-
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.recycler_view, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.recycler_view, container, false);
+        rootView.setTag(TAG);
 
-        super.onCreate(savedInstanceState);
-
-        RecyclerView mRecyclerView = (RecyclerView) getActivity().findViewById(R.id.list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-
-
-        appDatabase = new MySQLiteHelper(getActivity());
-
-        //Retrieve all app packages from PackageManager
         appPackages = getPackages();
 
-        //if (appDatabase.getAllApps().isEmpty()) {
+        // BEGIN_INCLUDE(initializeRecyclerView)
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
 
-            for (int i = 0; i < appPackages.size(); i++) {
+        // LinearLayoutManager is used here, this will layout the elements in a similar fashion
+        // to the way ListView would layout elements. The RecyclerView.LayoutManager defines how
+        // elements are laid out.
+        mLayoutManager = new LinearLayoutManager(getActivity());
 
-                final String applicationName = (String)((appPackages.get(i).applicationInfo != null) ? packageManager.getApplicationLabel(appPackages.get(i).applicationInfo) : "???");
+        mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
-                appDatabase.addApp(new App(
-                        appPackages.get(i).versionCode,
-                        appPackages.get(i).versionName,
-                        appPackages.get(i).lastUpdateTime,
-                        appPackages.get(i).packageName,
-                        applicationName,
-                        "No changelog text"
-                        ));
+        if (savedInstanceState != null) {
+            // Restore saved layout manager type.
+            mCurrentLayoutManagerType = (LayoutManagerType) savedInstanceState
+                    .getSerializable(KEY_LAYOUT_MANAGER);
+        }
+        setRecyclerViewLayoutManager(mCurrentLayoutManagerType);
 
-                String appUrlBuilder = "https://gplaystore.p.mashape.com/applicationDetails?id="+appPackages.get(i).packageName+"&lang=en";
+        mAdapter = new AppAdapter(appsList, R.layout.recent_tab, getActivity());
 
-                new SearchResult().execute(appUrlBuilder);
+        for (int i = 0; i < appPackages.size(); i++) {
 
+            String appUrlBuilder = "https://gplaystore.p.mashape.com/applicationDetails?id=" + appPackages.get(i).packageName + "&lang=en";
+
+            new SearchResult().execute(appUrlBuilder, appPackages.get(i).packageName);
+
+            if (mAdapter.getItemCount() != 0) {
+                mAdapter.notifyDataSetChanged();
             }
 
-        return v;
+        }
+
+        return rootView;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save currently selected layout manager.
+        savedInstanceState.putSerializable(KEY_LAYOUT_MANAGER, mCurrentLayoutManagerType);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    /**
+     * Set RecyclerView's LayoutManager to the one given.
+     *
+     * @param layoutManagerType Type of layout manager to switch to.
+     */
+    public void setRecyclerViewLayoutManager(LayoutManagerType layoutManagerType) {
+        int scrollPosition = 0;
+
+        // If a layout manager has already been set, get current scroll position.
+        if (mRecyclerView.getLayoutManager() != null) {
+            scrollPosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager())
+                    .findFirstCompletelyVisibleItemPosition();
+        }
+
+        switch (layoutManagerType) {
+            case GRID_LAYOUT_MANAGER:
+                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
+                mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
+                break;
+            case LINEAR_LAYOUT_MANAGER:
+                mLayoutManager = new LinearLayoutManager(getActivity());
+                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+                break;
+            default:
+                mLayoutManager = new LinearLayoutManager(getActivity());
+                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
+        }
+
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.scrollToPosition(scrollPosition);
+    }
 
     //PACKAGE HANDLER METHODS
     private List<PackageInfo> getPackages() {
@@ -173,6 +222,4 @@ public class RecentFragment extends Fragment {
         appPackages = packageManager.getInstalledPackages(0); /* 0 = no system packages */
         return appPackages;
     }
-
-
 }
