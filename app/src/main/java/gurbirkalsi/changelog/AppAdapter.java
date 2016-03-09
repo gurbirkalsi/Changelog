@@ -35,7 +35,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         App appObject = apps.get(i);
         viewHolder.appName.setText(appObject.getApplicationName());
-        viewHolder.versionCode.setText(String.valueOf(appObject.getVersionCode()));
+        viewHolder.versionNumber.setText(String.valueOf(appObject.getVersionNumber()));
         viewHolder.updateDate.setText(String.valueOf(appObject.getLastUdpateTime()));
         viewHolder.appIcon.setImageDrawable(appObject.getAppIcon());
         viewHolder.appChangelog.setText(appObject.getChangelogText());
@@ -48,7 +48,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView appName;
-        private TextView versionCode;
+        private TextView versionNumber;
         private TextView updateDate;
         private ImageView appIcon;
         private TextView appChangelog;
@@ -56,7 +56,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
         public ViewHolder(View itemView) {
             super(itemView);
             appName = (TextView) itemView.findViewById(R.id.app_name);
-            versionCode = (TextView) itemView.findViewById(R.id.version_code);
+            versionNumber = (TextView) itemView.findViewById(R.id.version_code);
             updateDate = (TextView) itemView.findViewById(R.id.update_date);
             appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
             appChangelog = (TextView) itemView.findViewById(R.id.app_changelog);

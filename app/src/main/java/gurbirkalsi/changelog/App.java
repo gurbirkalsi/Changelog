@@ -4,9 +4,9 @@ import android.graphics.drawable.Drawable;
 
 public class App {
 
-    private int versionCode;
+    private int versionNumber;
     private String versionName;
-    private long lastUdpateTime;
+    private String lastUdpateTime;
     private String packageName;
     private String applicationName;
     private String changelogText;
@@ -14,9 +14,9 @@ public class App {
 
     public App(){}
 
-    public App(int versionCode, String versionName, long lastUpdateTime, String packageName, String applicationName, String changelogText, Drawable appIcon) {
+    public App(int versionNumber, String versionName, String lastUpdateTime, String packageName, String applicationName, String changelogText, Drawable appIcon) {
         super();
-        this.versionCode = versionCode;
+        this.versionNumber = versionNumber;
         this.versionName = versionName;
         this.lastUdpateTime = lastUpdateTime;
         this.packageName = packageName;
@@ -25,12 +25,12 @@ public class App {
         this.appIcon = appIcon;
     }
 
-    public int getVersionCode() {
-        return versionCode;
+    public int getVersionNumber() {
+        return versionNumber;
     }
 
-    public void setVersionCode(int versionCode) {
-        this.versionCode = versionCode;
+    public void setVersionNumber(int versionNumber) {
+        this.versionNumber = versionNumber;
     }
 
     public String getVersionName() {
@@ -41,11 +41,11 @@ public class App {
         this.versionName = versionName;
     }
 
-    public long getLastUdpateTime() {
+    public String getLastUdpateTime() {
         return lastUdpateTime;
     }
 
-    public void setLastUdpateTime(long lastUdpateTime) {
+    public void setLastUdpateTime(String lastUdpateTime) {
         this.lastUdpateTime = lastUdpateTime;
     }
 
@@ -83,7 +83,7 @@ public class App {
 
     @Override
     public String toString() {
-        return "App [versionCode=" + versionCode + ", versionName=" + versionName + ", lastUpdateTime=" + lastUdpateTime + ", packageName=" + packageName + ", applicationName" + applicationName + ", changelogText" + changelogText + "]";
+        return "App [versionNumber=" + versionNumber + ", versionName=" + versionName + ", lastUpdateTime=" + lastUdpateTime + ", packageName=" + packageName + ", applicationName" + applicationName + ", changelogText" + changelogText + "]";
     }
 
 }

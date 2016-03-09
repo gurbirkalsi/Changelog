@@ -70,7 +70,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         //Create contentValue to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put(KEY_VERSION_CODE, app.getVersionCode());
+        values.put(KEY_VERSION_CODE, app.getVersionNumber());
         values.put(KEY_VERSION_NAME, app.getVersionName());
         values.put(KEY_LAST_UPDATE_TIME, app.getLastUdpateTime());
         values.put(KEY_PACKAGE_NAME, app.getPackageName());
@@ -100,9 +100,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         //Build App object
         App app = new App();
-        app.setVersionCode(cursor.getInt(0));
+        app.setVersionNumber(cursor.getInt(0));
         app.setVersionName(cursor.getString(1));
-        app.setLastUdpateTime(cursor.getLong(2));
+        app.setLastUdpateTime(cursor.getString(2));
         app.setPackageName(cursor.getString(3));
         app.setApplicationName(cursor.getString(4));
         app.setChangelogText(cursor.getString(5));
@@ -130,9 +130,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 app = new App();
-                app.setVersionCode(cursor.getInt(0));
+                app.setVersionNumber(cursor.getInt(0));
                 app.setVersionName(cursor.getString(1));
-                app.setLastUdpateTime(cursor.getLong(2));
+                app.setLastUdpateTime(cursor.getString(2));
                 app.setPackageName(cursor.getString(3));
                 app.setApplicationName(cursor.getString(4));
                 app.setChangelogText(cursor.getString(5));
@@ -156,7 +156,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         //Create contentValue to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put(KEY_VERSION_CODE, app.getVersionCode());
+        values.put(KEY_VERSION_CODE, app.getVersionNumber());
         values.put(KEY_VERSION_NAME, app.getVersionName());
         values.put(KEY_LAST_UPDATE_TIME, app.getLastUdpateTime());
         values.put(KEY_PACKAGE_NAME, app.getPackageName());

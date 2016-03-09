@@ -16,6 +16,9 @@
 
 package gurbirkalsi.changelog;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -29,6 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,6 +40,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -50,7 +55,7 @@ public class RecentFragment extends Fragment {
     private static final String TAG = "RecyclerViewFragment";
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
     private static final int SPAN_COUNT = 2;
-    private static final int DATASET_COUNT = 60;
+    SharedPreferences sharedPreferences;
 
     private enum LayoutManagerType {
         GRID_LAYOUT_MANAGER,
@@ -58,9 +63,6 @@ public class RecentFragment extends Fragment {
     }
 
     protected LayoutManagerType mCurrentLayoutManagerType;
-
-    protected RadioButton mLinearLayoutRadioButton;
-    protected RadioButton mGridLayoutRadioButton;
 
     protected RecyclerView mRecyclerView;
     protected AppAdapter mAdapter;
@@ -72,7 +74,7 @@ public class RecentFragment extends Fragment {
     List<PackageInfo> appPackages;
     PackageManager packageManager;
 
-    public class SearchResult extends AsyncTask<String, ArrayList<String>, JSONObject> {
+    public class SearchResult extends AsyncTask<String, ArrayList<String>, ArrayList<String>> {
 
         @Override
         protected void onPreExecute() {
@@ -81,7 +83,9 @@ public class RecentFragment extends Fragment {
         }
 
         @Override
-        protected JSONObject doInBackground(String... appUrl) {
+        protected ArrayList<String> doInBackground(String... appUrl) {
+
+            ArrayList<String> appInformation = new ArrayList<>();
 
             JSONObject object = null;
             URL url;
@@ -99,10 +103,11 @@ public class RecentFragment extends Fragment {
                 }
                 bufferedReader.close();
                 object = new JSONObject(stringBuilder.toString());
-                appsList.add(new App(0, "0", 123456789L, "package", (String) object.get("name"), (String) object.get("changelog"), packageManager.getApplicationIcon(appUrl[1])));
-            } catch (JSONException | IOException e) {
-                e.printStackTrace();
-            } catch (PackageManager.NameNotFoundException e) {
+                appsList.add(new App(0, object.get("versionName").toString(), object.get("datePublished").toString(), appUrl[1], (String) object.get("name"), (String) object.get("changelog"), packageManager.getApplicationIcon(appUrl[1])));
+                appInformation.add(appUrl[1]);
+                appInformation.add(object.get("changelog").toString());
+                appInformation.add(appUrl[2]);
+            } catch (JSONException | IOException | PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
             } finally {
                 try {
@@ -112,27 +117,32 @@ public class RecentFragment extends Fragment {
                 }
             }
 
-            return object;
+            return appInformation;
         }
 
         @Override
-        protected void onPostExecute(JSONObject response) {
+        protected void onPostExecute(ArrayList<String> appInformation) {
 
-            if (response == null) {
+            if (appInformation.size() != 0) {
 
-                Log.v("TAG", "This is a system process, not represented in UI");
-
-            } else {
-                try {
-                    //appsList.add(new App(0, "0", 123456789L, "package", (String) response.get("name"), (String) response.get("changelog")));
-                    Log.v("Added", "Added the app" + response.get("name").toString());
-                    mRecyclerView.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                sharedPreferences = getActivity().getSharedPreferences(appInformation.get(0), 0);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(appInformation.get(2), appInformation.get(1));
+                editor.apply();
+                mRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Context mContext = this.getActivity().getApplicationContext();
+        //0 = mode private. only this app can read these preferences
+        sharedPreferences = mContext.getSharedPreferences("myAppPrefs", 0);
+
     }
 
     @Override
@@ -162,17 +172,68 @@ public class RecentFragment extends Fragment {
 
         mAdapter = new AppAdapter(appsList, R.layout.recent_tab, getActivity());
 
-        for (int i = 0; i < appPackages.size(); i++) {
+        if (getFirstRun()) {
 
-            String appUrlBuilder = "https://gplaystore.p.mashape.com/applicationDetails?id=" + appPackages.get(i).packageName + "&lang=en";
+            Toast toast = Toast.makeText(getActivity(), "This is the first run", Toast.LENGTH_SHORT);
+            toast.show();
+            setRunned();
 
-            new SearchResult().execute(appUrlBuilder, appPackages.get(i).packageName);
+            for (int i = 0; i < appPackages.size(); i++) {
 
-            if (mAdapter.getItemCount() != 0) {
-                mAdapter.notifyDataSetChanged();
+                String appUrlBuilder = "https://gplaystore.p.mashape.com/applicationDetails?id=" + appPackages.get(i).packageName + "&lang=en";
+
+                new SearchResult().execute(appUrlBuilder, appPackages.get(i).packageName, String.valueOf(appPackages.get(i).versionCode));
+
+                if (mAdapter.getItemCount() != 0) {
+                    mAdapter.notifyDataSetChanged();
+                }
+
+            }
+
+        } else {
+
+            Toast toast = Toast.makeText(getActivity(), "This is not first run", Toast.LENGTH_SHORT);
+            toast.show();
+
+            for (int i = 0; i < appPackages.size(); i++) {
+
+                sharedPreferences = getActivity().getSharedPreferences(appPackages.get(i).packageName, Context.MODE_PRIVATE);
+
+                if (!sharedPreferences.contains(String.valueOf(appPackages.get(i).versionCode))) {
+
+                    String appUrlBuilder = "https://gplaystore.p.mashape.com/applicationDetails?id=" + appPackages.get(i).packageName + "&lang=en";
+
+                    new SearchResult().execute(appUrlBuilder, appPackages.get(i).packageName, String.valueOf(appPackages.get(i).versionCode));
+
+                    if (mAdapter.getItemCount() != 0) {
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                } else {
+
+                    ApplicationInfo applicationInfo = null;
+                    try {
+                        applicationInfo = packageManager.getApplicationInfo(appPackages.get(i).packageName, 0);
+                    } catch (final PackageManager.NameNotFoundException e) {}
+                    final String title = (String)((applicationInfo != null) ? packageManager.getApplicationLabel(applicationInfo) : "???");
+
+                    try {
+                        appsList.add(new App(0, appPackages.get(i).versionName, String.valueOf(appPackages.get(i).lastUpdateTime), appPackages.get(i).packageName, title, sharedPreferences.getString(String.valueOf(appPackages.get(i).versionCode), null), packageManager.getApplicationIcon(appPackages.get(i).packageName)));
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (mAdapter.getItemCount() != 0) {
+                        mRecyclerView.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                }
+
             }
 
         }
+
 
         return rootView;
     }
@@ -219,7 +280,19 @@ public class RecentFragment extends Fragment {
     //PACKAGE HANDLER METHODS
     private List<PackageInfo> getPackages() {
         packageManager = getActivity().getPackageManager();
-        appPackages = packageManager.getInstalledPackages(0); /* 0 = no system packages */
+        appPackages = packageManager.getInstalledPackages(1); /* 0 = no system packages */
         return appPackages;
     }
+
+    public boolean getFirstRun() {
+        return sharedPreferences.getBoolean("firstRun", true);
+    }
+
+    public void setRunned() {
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putBoolean("firstRun", false);
+        edit.commit();
+    }
+
+
 }

@@ -11,6 +11,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="5dp"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
             card_view:cardCornerRadius="4dp"
             android:id="@+id/cv"
             >
@@ -66,6 +68,7 @@
                     android:textSize="30sp"
                     android:layout_toRightOf="@id/app_icon"
                     android:layout_below="@id/app_icon"/>
+
 
             </RelativeLayout>
 
