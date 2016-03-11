@@ -58,7 +58,7 @@ public class RecentFragment extends Fragment {
     SharedPreferences sharedPreferences;
 
     private enum LayoutManagerType {
-        GRID_LAYOUT_MANAGER,
+        GRID_LAYOUT_MANAGER, 
         LINEAR_LAYOUT_MANAGER
     }
 

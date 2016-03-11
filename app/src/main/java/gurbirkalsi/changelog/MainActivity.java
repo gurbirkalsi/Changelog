@@ -2,6 +2,7 @@ package gurbirkalsi.changelog;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -48,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
         tabs.setCustomTabColorizer(new SlidingTabLayout.TabColorizer() {
             @Override
             public int getIndicatorColor(int position) {
-                return getResources().getColor(R.color.grey_900);
+                return Color.parseColor("#FFC107");
             }
         });
 

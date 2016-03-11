@@ -270,10 +270,9 @@
     <color name="grey_900">#212121</color>
     <color name="grey_1000">#ffffff</color> <!-- Grey 1000 (Black) -->
 
-    <color name="background">#25252F</color>
-    <color name="card_background">#5e6584</color>
     <color name="background2">#ECF0F1</color>
     <color name="status_bar">#1C1C23</color>
     <color name="timeline_rect">#52B1FF</color>
+    <color name="actionbar_background">#007DE3</color>
 
 </resources>
