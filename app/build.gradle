@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "gurbirkalsi.changelog"
-        minSdkVersion 7
+        minSdkVersion 11
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -37,5 +37,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0+'
     compile 'com.android.support:cardview-v7:23.0.+'
     compile 'com.mashape.unirest:unirest-android:1.0+'
+    compile 'com.github.ivbaranov:materialfavoritebutton:0.1.2'
+    compile 'com.jakewharton:butterknife:7.0.1'
 
 }

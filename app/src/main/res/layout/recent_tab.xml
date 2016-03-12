@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-        <android.support.v7.widget.CardView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:layout_gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="5dp"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
-            card_view:cardCornerRadius="4dp"
-            android:id="@+id/cv"
-            >
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="5dp"
+    android:paddingEnd="5dp"
+    android:paddingStart="5dp"
+    card_view:cardCornerRadius="4dp"
+    android:id="@+id/cv">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -65,13 +64,13 @@
                     android:layout_toRightOf="@id/app_icon"
                     android:layout_below="@id/app_icon"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/favorite_button_unhighlighted"
+                <gurbirkalsi.changelog.LikeButtonView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/favorite_button"
                     android:layout_toRightOf="@id/update_date"
                     android:layout_below="@id/app_changelog"
-                    />
+                    android:layout_alignParentRight="true"/>
 
 
             </RelativeLayout>

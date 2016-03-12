@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,8 +32,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import com.github.ivbaranov.mfb.MaterialFavoriteButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -131,6 +135,17 @@ public class RecentFragment extends Fragment {
                 editor.apply();
                 mRecyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
+
+                final MaterialFavoriteButton favoriteButton = (MaterialFavoriteButton) getActivity().findViewById(R.id.favorite_button);
+                favoriteButton.setOnFavoriteChangeListener(
+                        new MaterialFavoriteButton.OnFavoriteChangeListener() {
+                            @Override
+                            public void onFavoriteChanged(MaterialFavoriteButton buttonView, boolean favorite) {
+
+                            }
+                        }
+                );
+
             }
         }
     }

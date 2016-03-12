@@ -52,6 +52,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
         private TextView updateDate;
         private ImageView appIcon;
         private TextView appChangelog;
+        private LikeButtonView favoriteButton;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -60,6 +61,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder> {
             updateDate = (TextView) itemView.findViewById(R.id.update_date);
             appIcon = (ImageView) itemView.findViewById(R.id.app_icon);
             appChangelog = (TextView) itemView.findViewById(R.id.app_changelog);
+            favoriteButton = (LikeButtonView) itemView.findViewById(R.id.favorite_button);
         }
     }
 }
