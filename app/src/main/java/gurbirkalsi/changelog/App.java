@@ -11,6 +11,7 @@ public class App {
     private String applicationName;
     private String changelogText;
     private Drawable appIcon;
+    private boolean selected;
 
     public App(){}
 
@@ -86,4 +87,11 @@ public class App {
         return "App [versionNumber=" + versionNumber + ", versionName=" + versionName + ", lastUpdateTime=" + lastUdpateTime + ", packageName=" + packageName + ", applicationName" + applicationName + ", changelogText" + changelogText + "]";
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }
