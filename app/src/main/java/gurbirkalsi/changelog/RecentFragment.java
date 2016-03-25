@@ -21,19 +21,15 @@ import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -42,7 +38,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -67,13 +62,11 @@ public class RecentFragment extends Fragment {
     protected LayoutManagerType mCurrentLayoutManagerType;
 
     protected RecyclerView mRecyclerView;
-    protected AppAdapter mAdapter;
+    public static AppAdapter mAdapter;
     protected RecyclerView.LayoutManager mLayoutManager;
-    protected String[] mDataset;
 
-    List<App> appsList = new ArrayList<>();
-
-    List<PackageInfo> appPackages;
+    public static List<App> appsList = new ArrayList<>();
+    private static List<PackageInfo> appPackages;
     PackageManager packageManager;
 
     public class SearchResult extends AsyncTask<String, ArrayList<String>, ArrayList<String>> {

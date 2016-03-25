@@ -1,6 +1,7 @@
 package gurbirkalsi.changelog;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,12 +19,13 @@ import com.like.OnLikeListener;
 
 import java.lang.reflect.Array;
 import java.util.List;
+import java.util.Map;
 
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder>{
 
     PackageManager packageManager;
+    SharedPreferences sharedPreferences;
     private List<App> apps;
-    private boolean[] boolArray = new boolean[getItemCount()];
     private int rowLayout;
     private Context mContext;
 
@@ -43,7 +45,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
 
-        App appObject = apps.get(i);
+        final App appObject = apps.get(i);
         viewHolder.appName.setText(appObject.getApplicationName());
         viewHolder.versionNumber.setText(String.valueOf(appObject.getVersionNumber()));
         viewHolder.updateDate.setText(String.valueOf(appObject.getLastUdpateTime()));
@@ -59,15 +61,55 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder>{
                 App app = (App) likeButton.getTag();
                 app.setSelected(true);
 
+                sharedPreferences = mContext.getSharedPreferences("favoritedApps", 0);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString(appObject.getApplicationName(), appObject.getPackageName());
+                editor.apply();
 
+                Map<String,?> keys = sharedPreferences.getAll();
 
+                for(Map.Entry<String,?> entry : keys.entrySet()){
 
+                    App appObject = new App();
+
+                    for (int i = 0; i < RecentFragment.appsList.size(); i++) {
+                        if (RecentFragment.appsList.get(i).getPackageName().equals(entry.getValue()) && StarredFragment.favoritesList.contains(RecentFragment.appsList.get(i)) == false) {
+                            appObject = RecentFragment.appsList.get(i);
+                            appObject.setSelected(true);
+                            StarredFragment.favoritesList.add(appObject);
+                        }
+                    }
+
+                }
+
+                if (StarredFragment.mAdapter == null) {
+
+                    StarredFragment starredFragment = new StarredFragment();
+                    starredFragment.initializeViews();
+
+                }
+
+                StarredFragment.mAdapter.notifyDataSetChanged();
 
             }
 
             @Override
             public void unLiked(LikeButton likeButton) {
+                App app = (App) likeButton.getTag();
+                app.setSelected(false);
 
+                sharedPreferences = mContext.getSharedPreferences("favoritedApps", 0);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove(appObject.getApplicationName());
+                editor.apply();
+
+                for (int i = 0; i < StarredFragment.favoritesList.size(); i++) {
+                    if (StarredFragment.favoritesList.get(i).getPackageName().equals(appObject.getPackageName())) {
+                        StarredFragment.favoritesList.remove(i);
+                        StarredFragment.mAdapter.notifyDataSetChanged();
+                        RecentFragment.mAdapter.notifyDataSetChanged();
+                    }
+                }
             }
         });
     }

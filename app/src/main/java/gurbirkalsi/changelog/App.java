@@ -2,6 +2,8 @@ package gurbirkalsi.changelog;
 
 import android.graphics.drawable.Drawable;
 
+import java.util.ArrayList;
+
 public class App {
 
     private int versionNumber;
@@ -94,4 +96,5 @@ public class App {
     public void setSelected(boolean selected) {
         this.selected = selected;
     }
+
 }

@@ -35,12 +35,9 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         }
         else
         {
-
             AllFragment allFragment = new AllFragment();
             return allFragment;
-
         }
-
 
     }
 
