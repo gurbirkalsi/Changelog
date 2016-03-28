@@ -23,7 +23,6 @@ import java.util.Map;
 
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder>{
 
-    PackageManager packageManager;
     SharedPreferences sharedPreferences;
     private List<App> apps;
     private int rowLayout;
@@ -37,7 +36,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder>{
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        packageManager = this.mContext.getPackageManager();
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(rowLayout, viewGroup, false);
         return new ViewHolder(v);
     }

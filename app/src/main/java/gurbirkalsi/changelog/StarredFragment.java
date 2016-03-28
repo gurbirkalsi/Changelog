@@ -28,7 +28,6 @@ public class StarredFragment extends Fragment {
     public static SharedPreferences sharedPreferences;
 
     private enum LayoutManagerType {
-        GRID_LAYOUT_MANAGER,
         LINEAR_LAYOUT_MANAGER
     }
 
@@ -108,19 +107,8 @@ public class StarredFragment extends Fragment {
                     .findFirstCompletelyVisibleItemPosition();
         }
 
-        switch (layoutManagerType) {
-            case GRID_LAYOUT_MANAGER:
-                mLayoutManager = new GridLayoutManager(getActivity(), SPAN_COUNT);
-                mCurrentLayoutManagerType = LayoutManagerType.GRID_LAYOUT_MANAGER;
-                break;
-            case LINEAR_LAYOUT_MANAGER:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-                break;
-            default:
-                mLayoutManager = new LinearLayoutManager(getActivity());
-                mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
-        }
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mCurrentLayoutManagerType = LayoutManagerType.LINEAR_LAYOUT_MANAGER;
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.scrollToPosition(scrollPosition);
