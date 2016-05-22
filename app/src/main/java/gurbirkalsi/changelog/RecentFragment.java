@@ -290,5 +290,4 @@ public class RecentFragment extends Fragment {
         edit.commit();
     }
 
-
 }

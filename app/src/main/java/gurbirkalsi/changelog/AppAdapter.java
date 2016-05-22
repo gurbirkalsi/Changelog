@@ -48,6 +48,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder>{
         viewHolder.versionNumber.setText(String.valueOf(appObject.getVersionNumber()));
         viewHolder.updateDate.setText(String.valueOf(appObject.getLastUdpateTime()));
         viewHolder.appIcon.setImageDrawable(appObject.getAppIcon());
+        viewHolder.appIcon.getLayoutParams().height = 144;
+        viewHolder.appIcon.getLayoutParams().width = 144;
         viewHolder.appChangelog.setText(appObject.getChangelogText());
         viewHolder.favoriteButton.setIcon(IconType.Star);
         viewHolder.favoriteButton.setIconSizeDp(20);
@@ -68,7 +70,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.ViewHolder>{
 
                 for(Map.Entry<String,?> entry : keys.entrySet()){
 
-                    App appObject = new App();
+                    App appObject;
 
                     for (int i = 0; i < RecentFragment.appsList.size(); i++) {
                         if (RecentFragment.appsList.get(i).getPackageName().equals(entry.getValue()) && StarredFragment.favoritesList.contains(RecentFragment.appsList.get(i)) == false) {

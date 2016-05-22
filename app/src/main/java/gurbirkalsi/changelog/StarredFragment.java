@@ -23,7 +23,6 @@ public class StarredFragment extends Fragment {
 
     private static final String TAG = "RecyclerViewFragment";
     private static final String KEY_LAYOUT_MANAGER = "layoutManager";
-    private static final int SPAN_COUNT = 2;
 
     public static SharedPreferences sharedPreferences;
 
